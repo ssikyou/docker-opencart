@@ -1,0 +1,52 @@
+FROM php:5.6-apache
+MAINTAINER ssikyou "ssikyou@gmail.com"
+ENV REFRESHED_AT 2017-1-23
+
+#RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
+#COPY sources-jessie.aliyun /etc/apt/sources.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    vim \
+	ntp \
+    cron \
+    libfreetype6-dev \
+    libicu-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libpng12-dev \
+    libxslt1-dev \
+&& rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure \
+    gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+
+RUN docker-php-ext-install \
+    gd \
+    intl \
+    mbstring \
+    mcrypt \
+    pdo_mysql \
+    soap \
+    xsl \
+    zip
+
+RUN curl -sS https://getcomposer.org/installer | \
+  php -- --install-dir=/usr/local/bin --filename=composer
+
+ARG DOMAIN_NAME
+COPY conf/php.ini /usr/local/etc/php/
+COPY scripts/* /usr/local/bin/
+COPY conf/base.conf /etc/apache2/sites-available/
+COPY conf/${DOMAIN_NAME}.https.conf /etc/apache2/sites-available/
+COPY m2files/* /tmp/
+COPY robots.txt /tmp/
+COPY certs/${DOMAIN_NAME}/* /etc/apache2/certs/${DOMAIN_NAME}/
+
+RUN a2dissite 000-default.conf
+RUN a2enmod ssl
+RUN a2ensite ${DOMAIN_NAME}.https.conf
+RUN a2enmod rewrite
+
+WORKDIR /var/www/html
+
+CMD ["/usr/local/bin/start"]

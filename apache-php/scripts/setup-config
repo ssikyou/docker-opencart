@@ -1,0 +1,5 @@
+#!/bin/bash
+BASE_DIR=/var/www
+SRC_DIR=$BASE_DIR/html/$DOMAIN_NAME
+
+echo "App is starting..."

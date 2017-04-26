@@ -1,0 +1,68 @@
+version: '2'
+services:
+  appdata:
+    image: tianon/true
+    volumes:
+      - ./webroot:/var/www/html
+#      - ~/.composer:/var/www/.composer
+#     - ./html/app/code:/var/www/html/app/code
+#     - ./html/app/design:/var/www/html/app/design
+
+  mysql:
+    build: ./mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: opencart
+      MYSQL_USER: opencart
+      MYSQL_PASSWORD: opencart
+
+  app:
+    build:
+      context: ./apache-php
+      args:
+        DOMAIN_NAME: localhost
+    ports: 
+      - "80:80"
+      - "443:443"
+    volumes_from:
+      - appdata
+    volumes:
+      - ./apache-php/logs:/var/log/apache2
+    links:
+      - mysql
+    environment:
+      DOMAIN_NAME: localhost
+      XDEBUG_CONFIG: remote_host=172.18.0.1
+
+  setup:
+    build:
+      context: ./apache-php
+      args:
+        DOMAIN_NAME: localhost
+    #command: /usr/local/bin/app-setup
+    links:
+      - mysql
+    volumes_from:
+      - appdata
+    environment:
+        DOMAIN_NAME: localhost
+        SETUP_DB_HOST: mysql
+        SETUP_DB_NAME: opencart
+        SETUP_DB_USER: opencart
+        SETUP_DB_PASSWORD: opencart
+        SETUP_SECURE: 'false'
+        SETUP_BASE_URL: http://localhost/
+        SETUP_BASE_SECURE_URL: https://localhost/
+        SETUP_BACKEND_NAME: admin_test
+        SETUP_ADMIN_EMAIL: dummy@gmail.com
+        SETUP_ADMIN_USER: admin
+        SETUP_ADMIN_PASSWORD: admin123
+        SETUP_VERSION: 2.3.0.2
+        SETUP_USE_ARCHIVE: 'true'
+
+

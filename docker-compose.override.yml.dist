@@ -1,0 +1,45 @@
+#You can use this file to change any of the defaults supplied in docker-compose.yml
+#Copy this file to docker-compose.override.yml. Docker compose will read these changes for you.
+#
+#Example showing how you can change the domain url in this file:
+#
+#None https version:
+#version: '2'
+#services:
+#  app:
+#    build:
+#      dockerfile: Dockerfile.vps
+#	   args:
+#	     DOMAIN_NAME: xxx.com
+#	 environment:
+#      DOMAIN_NAME: xxx.com
+#
+#  setup:
+#    build:
+#      dockerfile: Dockerfile.vps
+#	   args:
+#	     DOMAIN_NAME: xxx.com
+#    environment:
+#      DOMAIN_NAME: xxx.com
+#      SETUP_BASE_URL: http://xxx.com/
+#
+#Https version:
+#version: '2'
+#services:
+#  app:
+#    build:
+#      dockerfile: Dockerfile.vps.https
+#	   args:
+#	     DOMAIN_NAME: xxx.com
+#	 environment:
+#      DOMAIN_NAME: xxx.com
+#
+#  setup:
+#    build:
+#      dockerfile: Dockerfile.vps.https
+#	   args:
+#	     DOMAIN_NAME: xxx.com
+#    environment:
+#      DOMAIN_NAME: xxx.com
+#      SETUP_SECURE: 'true'
+#      SETUP_BASE_SECURE_URL: https://xxx.com/

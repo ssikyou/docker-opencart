@@ -1,0 +1,61 @@
+#!/bin/sh
+echo "Initializing setup..."
+
+mkdir /var/www/html/$DOMAIN_NAME
+cd /var/www/html/$DOMAIN_NAME
+
+if [ -f ./config.php ] || [ -f ./admin/config.php ]; then
+  echo "It appears OpenCart is already installed (config.php or admin/config.php exist). Exiting setup..."
+  exit
+fi
+
+if [ "$SETUP_USE_ARCHIVE" = true ]; then
+  echo "Untarring archive..."
+
+  #curl -L http://pubfiles.nexcess.net/magento/ce-packages/magento2-$M2SETUP_VERSION.tar.gz | tar xzf - -o -C .
+  unzip -q /tmp/$SETUP_VERSION-compiled.zip -d tmp
+  cp -R tmp/upload/* .
+  cp -R tmp/vendor ../
+  mv config-dist.php config.php
+  mv admin/config-dist.php admin/config.php
+  cp /tmp/robots.txt .
+  rm -rf tmp
+
+else
+  echo "Downloading and untarring archive..."
+fi
+
+chmod +x ./install/cli_install.php
+
+
+#if [ 0 = 1 ]; then
+echo "Waiting for mysql ready..."
+sleep 30
+
+echo "Running OpenCart setup script..."
+if [ "$SETUP_SECURE" != true ]; then
+/usr/local/bin/php ./install/cli_install.php install \
+  --db_hostname $SETUP_DB_HOST \
+  --db_database $SETUP_DB_NAME \
+  --db_username $SETUP_DB_USER \
+  --db_password $SETUP_DB_PASSWORD \
+  --http_server $SETUP_BASE_URL \
+  --email $SETUP_ADMIN_EMAIL \
+  --username $SETUP_ADMIN_USER \
+  --password $SETUP_ADMIN_PASSWORD
+else
+/usr/local/bin/php ./install/cli_install.php install \
+  --db_hostname $SETUP_DB_HOST \
+  --db_database $SETUP_DB_NAME \
+  --db_username $SETUP_DB_USER \
+  --db_password $SETUP_DB_PASSWORD \
+  --http_server $SETUP_BASE_SECURE_URL \
+  --email $SETUP_ADMIN_EMAIL \
+  --username $SETUP_ADMIN_USER \
+  --password $SETUP_ADMIN_PASSWORD
+fi
+
+#rm -rf install
+
+echo "The setup script has completed execution."
+#fi
