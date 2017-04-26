@@ -44,7 +44,7 @@ services:
       context: ./apache-php
       args:
         DOMAIN_NAME: localhost
-    #command: /usr/local/bin/app-setup
+    command: /usr/local/bin/app-setup
     links:
       - mysql
     volumes_from:
