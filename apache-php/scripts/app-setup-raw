@@ -4,10 +4,15 @@ echo "Initializing setup..."
 mkdir /var/www/html/$DOMAIN_NAME
 cd /var/www/html/$DOMAIN_NAME
 
-if [ -f ./config.php ] || [ -f ./admin/config.php ]; then
-  echo "It appears OpenCart is already installed (config.php or admin/config.php exist). Exiting setup..."
+if [ "`ls`" != "" ] && [ ! -d ./install ]; then
+  echo "It appears OpenCart is already installed (install dir is deleted). Exiting setup..."
   exit
 fi
+
+#if [ -f ./config.php ] || [ -f ./admin/config.php ]; then
+#  echo "It appears OpenCart is already installed (config.php or admin/config.php exist). Exiting setup..."
+#  exit
+#fi
 
 if [ "$SETUP_USE_ARCHIVE" = true ]; then
   echo "Untarring archive..."
@@ -55,7 +60,12 @@ else
   --password $SETUP_ADMIN_PASSWORD
 fi
 
-#rm -rf install
+if [ $? -eq 0 ]; then
+  echo "App has installed successfully, delete install directory now!"
+  rm -rf install
+else
+  echo "install failed, return value: $?"
+fi
 
 echo "The setup script has completed execution."
 #fi

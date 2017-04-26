@@ -32,6 +32,8 @@ apache-php/certs/
 webroot/localhost/
 webroot/*.com/
 webroot/vendor/
+*.sublime-project
+*.sublime-workspace
 
 #
 # ctags and cscope files

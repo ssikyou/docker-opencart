@@ -23,7 +23,7 @@ docker-compose up -d app
 If you need to modify app container, there are two methods:
 1. You just attach to the container and modify the enviroment
 ```
-docker exec -it webdev_app_1 bash
+docker exec -it dockeropencart_app_1 bash
 ```
 
 2. Modify outside and restart the container.
@@ -33,8 +33,8 @@ docker-compose build --force-rm --no-cache app
 ```
 Stop and remove the container
 ```
-docker stop webdev_app_1
-docker rm webdev_app_1
+docker stop dockeropencart_app_1
+docker rm dockeropencart_app_1
 ```
 Start the modified container again
 ```

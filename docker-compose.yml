@@ -4,9 +4,6 @@ services:
     image: tianon/true
     volumes:
       - ./webroot:/var/www/html
-#      - ~/.composer:/var/www/.composer
-#     - ./html/app/code:/var/www/html/app/code
-#     - ./html/app/design:/var/www/html/app/design
 
   mysql:
     build: ./mysql
@@ -37,7 +34,7 @@ services:
       - mysql
     environment:
       DOMAIN_NAME: localhost
-      XDEBUG_CONFIG: remote_host=172.18.0.1
+      XDEBUG_CONFIG: remote_host=172.19.0.1
 
   setup:
     build:
@@ -64,5 +61,3 @@ services:
         SETUP_ADMIN_PASSWORD: admin123
         SETUP_VERSION: 2.3.0.2
         SETUP_USE_ARCHIVE: 'true'
-
-

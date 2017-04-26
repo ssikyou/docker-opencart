@@ -42,7 +42,6 @@ COPY conf/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/
  
 ARG DOMAIN_NAME
 COPY conf/php.ini /usr/local/etc/php/
-ENV A 2
 COPY scripts/* /usr/local/bin/
 COPY conf/base.conf /etc/apache2/sites-available/
 COPY conf/${DOMAIN_NAME}.conf /etc/apache2/sites-available/
